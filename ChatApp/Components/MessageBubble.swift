@@ -10,47 +10,32 @@ import SwiftUI
 
 struct MessageBubble: View {
     var message: Message
+    @State private var showTime = false
     
     var body: some View {
-        VStack {
+        VStack(alignment: message.received ? .leading : .trailing) {
             HStack {
-                if message.received {
-                    // Received message (Align left)
-                    bubbleView()
-                        .frame(maxWidth: 250, alignment: .leading)
-                    Spacer()
-                } else {
-                    // Sent message (Align right)
-                    Spacer()
-                    bubbleView()
-                        .frame(maxWidth: 250, alignment: .trailing)
-                }
+                Text(message.text)
+                    .padding()
+                    .background(message.received ? Color("CustomGray") : Color("Peach"))
+                    .cornerRadius(30)
             }
-            .padding(.horizontal)
+            .frame(maxWidth: 300, alignment: message.received ? .leading : .trailing)
+            .onTapGesture {
+                showTime.toggle()
+            }
             
-            Text("\(message.timestamp.formatted(.dateTime.hour().minute()))")
-                .font(.caption)
-                .opacity(0.7)
-                .frame(maxWidth: .infinity, alignment: message.received ? .leading : .trailing)
-                .padding(message.received ? .leading : .trailing, 28)
+            if showTime {
+                Text("\(message.timestamp.formatted(.dateTime.hour().minute()))")
+                    .font(.caption2)
+                    .foregroundColor(.gray)
+                    .padding(message.received ? .leading : .trailing, 25)
+            }
         }
-        
-    }
-    
-    @ViewBuilder
-    private func bubbleView() -> some View {
-        Text(message.text)
-            .padding(12)
-            .background(message.received ? Color.gray.opacity(0.2) : Color.blue)
-            .foregroundColor(message.received ? .black : .white)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.gray.opacity(0.3), lineWidth: message.received ? 1 : 0)
-            )
+        .frame(maxWidth: .infinity, alignment: message.received ? .leading : .trailing)
+        .padding(message.received ? .leading : .trailing)
+        .padding(.horizontal, 10)
     }
 }
 
-#Preview {
-    MessageBubble(message: Message(id: "12883723", text: "This is a messaage.it can be a very good message.", received: true, timestamp: Date()))
-}
+

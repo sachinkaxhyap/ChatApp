@@ -39,6 +39,3 @@ struct MessageBubble2: View {
     }
 }
 
-#Preview {
-    MessageBubble2(message: Message(id: "12883723", text: "This is a messaage.", received: true, timestamp: Date()))
-}
